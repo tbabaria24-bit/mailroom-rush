@@ -6,7 +6,7 @@ export default function RosterLookup({ roster, query, onQueryChange, parcelKey }
 
   // Clear and refocus the search box whenever a new parcel arrives.
   useEffect(() => {
-    inputRef.current?.focus()
+    inputRef.current?.focus({ preventScroll: true })
   }, [parcelKey])
 
   const results = useMemo(() => {
