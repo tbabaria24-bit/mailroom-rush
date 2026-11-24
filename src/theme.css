@@ -1,0 +1,153 @@
+/* =====================================================================
+   Theme: dark "music-app" look (near-black surfaces, one green accent,
+   pill buttons, heavy rounded type). Loaded after index.css and only
+   overrides tokens and surfaces; layout lives in index.css.
+   ===================================================================== */
+:root {
+  --paper: #121212;
+  --paper-2: #1f1f1f;
+  --card: #181818;
+  --card-2: #242424;
+  --ink: #ffffff;
+  --ink-2: #b3b3b3;
+  --line: #2a2a2a;
+  --accent: #1ed760;
+  --good: #1ed760;
+  --bad: #f3727f;
+  --warn: #ffa42b;
+  --info: #539df5;
+  --radius: 8px;
+  --shadow: rgba(0, 0, 0, 0.5) 0 8px 24px;
+  font-family: 'Figtree', system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  color-scheme: dark;
+}
+
+body { background: linear-gradient(180deg, #1c3a29 0, #121212 440px) no-repeat, #121212; }
+
+/* Type: heavy, tight display; no mono eyebrows */
+.start h1, .hud__brand, .results__rank h1, .modal h2, .daycard__title, .carrier, .wall__hall, .modal--brief h2 {
+  font-family: 'Figtree', sans-serif; font-weight: 900; letter-spacing: -0.035em;
+}
+.eyebrow { font-family: 'Figtree', sans-serif; font-weight: 700; letter-spacing: .14em; color: var(--ink-2); }
+.eyebrow { color: var(--accent); }
+h2 { color: var(--ink); letter-spacing: .08em; }
+.lede, .tabnote { color: var(--ink-2); }
+
+/* Surfaces: borderless cards with deep shadows */
+.panel, .wall__col, .diff, .daycard, .modal, .results__card {
+  background: var(--card); border: none; border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.results__card { box-shadow: var(--shadow); border: none; }
+
+/* Buttons: green pills, uppercase, tracked */
+.btn {
+  background: var(--accent); border: none; color: #000; border-radius: 9999px;
+  text-transform: uppercase; letter-spacing: .14em; font-weight: 700; font-size: .82rem; padding: 12px 26px;
+}
+.btn:hover { transform: scale(1.04); box-shadow: none; background: #3be477; }
+.btn:active { transform: scale(.98); }
+.btn--big { font-size: .9rem; padding: 16px 34px; }
+.btn--ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px #7c7c7c; }
+.btn--ghost:hover { background: transparent; box-shadow: inset 0 0 0 1px #fff; transform: scale(1.04); }
+.btn:focus-visible, .bin:focus-visible, .rts:focus-visible, .desk:focus-visible, .diff:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Tabs */
+.tabs { background: #000; }
+.tabs button { color: var(--ink-2); }
+.tabs button.on { background: #fff; color: #000; }
+.minitabs button { border-color: #4d4d4d; color: var(--ink-2); }
+.minitabs button.on { background: #fff; color: #000; border-color: #fff; }
+
+/* Career + difficulty cards */
+.daycard:not(:disabled):hover, .diff:hover { transform: translateY(-3px); background: #282828; box-shadow: var(--shadow); border-color: transparent; }
+.daycard__day { font-family: 'Figtree', sans-serif; font-weight: 800; color: var(--accent); }
+.daycard__score { font-family: 'Figtree', sans-serif; }
+.daycard--done { box-shadow: inset 0 0 0 2px var(--accent), var(--shadow); }
+.daycard--locked { background: #121212; box-shadow: inset 0 0 0 1px #2a2a2a; }
+.diff--on { box-shadow: inset 0 0 0 2px var(--accent), var(--shadow); border-color: transparent; }
+
+/* Hall chips readable on dark */
+.hall-chip {
+  color: color-mix(in srgb, var(--hall) 55%, white);
+  background: color-mix(in srgb, var(--hall) 22%, #181818);
+  border-color: transparent;
+}
+
+/* HUD */
+.hud { background: #000; color: #fff; }
+.hud__brand, .hud .stat__v { color: #fff; }
+.hud .stat__k { color: var(--ink-2); opacity: 1; }
+.tag { background: var(--accent); color: #000; }
+.stat__v.hot, .stat__v.met { color: var(--accent); }
+.stat.urgent .stat__v, .timebar span.urgent { color: var(--bad); }
+.timebar span { background: var(--accent); }
+.timebar span.urgent { background: var(--bad); }
+.hud .btn--ghost { padding: 7px 16px; box-shadow: inset 0 0 0 1px #7c7c7c; color: #fff; border: none; }
+
+/* The parcel and its label stay "physical": light paper, dark ink */
+.parcel { box-shadow: 0 16px 32px -12px rgba(0,0,0,.8); }
+.label { --ink: #121212; color: #121212; border-color: #121212; }
+.label .carrier { font-family: 'Figtree', sans-serif; font-weight: 900; }
+.feedback { background: var(--card-2); color: var(--ink-2); }
+.feedback--good { background: color-mix(in srgb, var(--good) 16%, #181818); color: var(--good); }
+.feedback--bad { background: color-mix(in srgb, var(--bad) 16%, #181818); color: var(--bad); }
+
+/* Roster */
+.search { background: var(--card-2); color: #fff; border: none; border-radius: 500px; padding: 12px 18px; }
+.search::placeholder { color: #7c7c7c; }
+.search:focus { outline: none; box-shadow: inset 0 0 0 2px #fff; }
+.roster__row { border-bottom-color: var(--line); }
+
+/* Wall */
+.wall__hall { border-bottom: none; color: color-mix(in srgb, var(--hall) 55%, white); }
+.bin {
+  background: var(--card-2); border: none; border-radius: 6px; color: #fff;
+  box-shadow: inset 3px 0 0 var(--hall);
+}
+.bin:hover { background: #2e2e2e; border-color: transparent; transform: translateY(-1px); }
+.bin__hint { color: var(--ink-2); }
+.bin--good { background: color-mix(in srgb, var(--good) 28%, #242424) !important; }
+.bin--bad { background: color-mix(in srgb, var(--bad) 28%, #242424) !important; }
+.desk { background: color-mix(in srgb, var(--bad) 12%, #181818); border: none; box-shadow: inset 0 0 0 1px var(--bad); color: #fff; border-radius: var(--radius); }
+.desk:hover { background: color-mix(in srgb, var(--bad) 20%, #181818); }
+.rts { border-color: #4d4d4d; color: #fff; border-radius: var(--radius); }
+.rts:hover { background: var(--card); border-color: #fff; }
+
+/* Pickup window: warning orange on dark */
+.pickup { background: color-mix(in srgb, var(--warn) 12%, #181818); border: none; box-shadow: inset 0 0 0 2px var(--warn), var(--shadow); color: #fff; }
+.pickup__hint { color: var(--ink-2); }
+.pickup__bar { background: rgba(255,255,255,.1); }
+.pickup__bar span { background: var(--warn); }
+.wall--pickup .wall__col { box-shadow: inset 0 0 0 2px var(--warn), var(--shadow); }
+
+/* Perishables: announcement blue */
+.stamp { background: #fff; }
+.stamp--cold, .fresh { color: #1d6fd1; }
+.fresh__bar i { background: #1d6fd1; }
+
+/* Overlays + briefing */
+.overlay { background: rgba(0,0,0,.7); }
+.modal--brief { border: none; box-shadow: var(--shadow); }
+.new-rule { background: var(--accent); color: #000; }
+
+/* Results */
+.results__score { font-family: 'Figtree', sans-serif; font-weight: 900; color: var(--accent); letter-spacing: -0.03em; }
+.results__grid > div { background: var(--card-2); }
+.results__grid .stat__v { font-family: 'Figtree', sans-serif; font-weight: 800; }
+.verdict--pass { background: color-mix(in srgb, var(--good) 16%, #181818); color: var(--good); }
+.verdict--fail { background: color-mix(in srgb, var(--bad) 16%, #181818); color: var(--bad); }
+.badge, .badge--good { background: var(--accent); color: #000; }
+.mistakes li { background: var(--card-2); border-left-color: var(--bad); }
+.mistakes__fix { color: var(--good); }
+.hallbar__k { color: color-mix(in srgb, var(--hall) 55%, white); }
+.hallbar__track { background: var(--card-2); }
+.board li:nth-child(odd) { background: var(--card-2); }
+.board__rank { color: var(--accent); font-family: 'Figtree', sans-serif; font-weight: 800; }
+.board__score { font-family: 'Figtree', sans-serif; font-weight: 800; }
+.board__me { outline-color: var(--accent); }
+.scores li span:first-child { font-weight: 800; }
+
+.foot { color: #6a6a6a; }
+.stamp { top: auto; bottom: 34px; right: -4px; }

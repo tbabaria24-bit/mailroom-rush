@@ -12,7 +12,7 @@
   --bad: #c9352b;
   --radius: 14px;
   --shadow: 0 1px 0 rgba(30, 27, 22, 0.06), 0 8px 24px -12px rgba(30, 27, 22, 0.25);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Figtree', system-ui, sans-serif;
   color: var(--ink);
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
@@ -55,7 +55,7 @@ h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color
 /* ---------- Start screen ---------- */
 .start { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; max-width: 1180px; margin: 0 auto; padding: 56px 28px 24px; }
 .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; text-transform: uppercase; letter-spacing: .14em; color: var(--accent); margin: 0 0 14px; }
-.start h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(3.4rem, 8vw, 6.4rem); line-height: .9; letter-spacing: -0.02em; }
+.start h1 { font-family: 'Figtree', sans-serif; font-size: clamp(3.4rem, 8vw, 6.4rem); line-height: .9; letter-spacing: -0.02em; }
 .dot { color: var(--accent); }
 .lede { font-size: 1.12rem; line-height: 1.55; color: var(--ink-2); max-width: 520px; margin: 22px 0 28px; }
 .difficulty { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
@@ -83,7 +83,7 @@ h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color
   position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
   padding: 12px 24px 16px; background: var(--ink); color: var(--paper);
 }
-.hud__brand { font-family: 'Archivo Black', sans-serif; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
+.hud__brand { font-family: 'Figtree', sans-serif; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
 .logo-box { width: 22px; height: 18px; background: var(--kraft); border-radius: 3px; box-shadow: inset 8px 0 0 -4px var(--kraft-dark), inset -8px 0 0 -4px var(--kraft-dark); position: relative; }
 .tag { font-family: 'IBM Plex Mono', monospace; font-size: .7rem; background: var(--accent); color: white; padding: 2px 8px; border-radius: 999px; }
 .hud__stats { display: flex; gap: 28px; margin-left: auto; }
@@ -118,7 +118,7 @@ h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color
 }
 .label--bad { animation: slideIn .28s cubic-bezier(.2,.9,.3,1.2); }
 .label__top { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin-bottom: 8px; }
-.carrier { font-family: 'Archivo Black', sans-serif; font-size: 1.2rem; }
+.carrier { font-family: 'Figtree', sans-serif; font-size: 1.2rem; }
 .size-chip { font-size: .72rem; border: 1px solid var(--ink); padding: 2px 6px; border-radius: 4px; }
 .label__to { font-size: .65rem; opacity: .6; }
 .label__name { font-size: 1.25rem; font-weight: 600; line-height: 1.2; margin: 2px 0 4px; }
@@ -142,7 +142,7 @@ h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color
 .wall { display: flex; flex-direction: column; gap: 14px; }
 .wall__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .wall__col { display: flex; flex-direction: column; gap: 10px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; box-shadow: var(--shadow); }
-.wall__hall { font-family: 'Archivo Black', sans-serif; font-size: 1rem; color: var(--hall); border-bottom: 3px solid var(--hall); padding-bottom: 8px; }
+.wall__hall { font-family: 'Figtree', sans-serif; font-size: 1rem; color: var(--hall); border-bottom: 3px solid var(--hall); padding-bottom: 8px; }
 .bin {
   position: relative; text-align: left; display: flex; flex-direction: column; gap: 2px; min-height: 84px;
   padding: 10px 12px; border-radius: 10px; border: 2px solid color-mix(in srgb, var(--hall) 30%, white);
@@ -165,7 +165,7 @@ h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color
 /* Overlay */
 .overlay { position: fixed; inset: 0; background: rgba(30,27,22,.55); display: grid; place-items: center; z-index: 20; animation: fadeIn .2s; backdrop-filter: blur(3px); }
 .modal { background: var(--card); padding: 28px; border-radius: var(--radius); max-width: 380px; width: 90%; text-align: center; box-shadow: var(--shadow); }
-.modal h2 { font-family: 'Archivo Black', sans-serif; font-size: 1.6rem; text-transform: none; letter-spacing: 0; color: var(--ink); }
+.modal h2 { font-family: 'Figtree', sans-serif; font-size: 1.6rem; text-transform: none; letter-spacing: 0; color: var(--ink); }
 .modal__actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
 
 /* Results */
@@ -173,7 +173,7 @@ h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color
 .results__card { background: var(--card); border: 2px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); border-radius: 18px; padding: 36px; max-width: 560px; width: 100%; text-align: center; animation: slideIn .4s cubic-bezier(.2,.9,.3,1.2); }
 .results__rank { display: flex; align-items: center; justify-content: center; gap: 12px; }
 .results__emoji { font-size: 2.4rem; }
-.results__rank h1 { font-family: 'Archivo Black', sans-serif; font-size: 2rem; }
+.results__rank h1 { font-family: 'Figtree', sans-serif; font-size: 2rem; }
 .results__score { font-family: 'IBM Plex Mono', monospace; font-size: 3.6rem; font-weight: 600; margin: 14px 0 4px; color: var(--accent); }
 .results__score span { display: block; font-size: .8rem; color: var(--ink-2); text-transform: uppercase; letter-spacing: .15em; }
 .badge { display: inline-block; background: var(--ink); color: var(--paper); padding: 4px 12px; border-radius: 999px; font-size: .8rem; font-weight: 600; }
@@ -230,7 +230,7 @@ h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color
 }
 .daycard:not(:disabled):hover { transform: translateY(-3px); border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
 .daycard__day { font-family: 'IBM Plex Mono', monospace; font-size: .72rem; text-transform: uppercase; letter-spacing: .14em; color: var(--accent); font-weight: 600; }
-.daycard__title { font-family: 'Archivo Black', sans-serif; font-size: 1rem; line-height: 1.1; }
+.daycard__title { font-family: 'Figtree', sans-serif; font-size: 1rem; line-height: 1.1; }
 .daycard__rule { font-size: .78rem; color: var(--ink-2); line-height: 1.35; flex: 1; }
 .daycard__score { font-family: 'IBM Plex Mono', monospace; font-size: .72rem; color: var(--ink-2); }
 .daycard--done { border-color: var(--good); }
