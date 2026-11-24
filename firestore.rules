@@ -10,5 +10,9 @@ service cloud.firestore {
         && request.resource.data.createdAt == request.time;
       allow update, delete: if false;
     }
+    // Everything else stays locked.
+    match /{document=**} {
+      allow read, write: if false;
+    }
   }
 }
