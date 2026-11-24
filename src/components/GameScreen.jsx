@@ -15,6 +15,8 @@ import MailroomWall from './MailroomWall'
 import PickupWindow from './PickupWindow'
 
 const MAX_BONUS_SECONDS = 30
+const fixFor = (answer) =>
+  answer === 'rts' ? 'should have gone back to sender' : `belonged in ${describe(answer)}`
 const nameOf = (p) => `${p.recipient.first} ${p.recipient.last}`
 
 // ---------- Game state lives in one reducer so timers and clicks stay in sync ----------
@@ -87,7 +89,7 @@ function reducer(state, action) {
             ...penalty(s, 75, `🧊 Spoiled! ${nameOf(s.parcel)}'s delivery sat too long. −75`, {
               name: nameOf(s.parcel),
               issue: 'Perishable spoiled before it was shelved',
-              fix: `belonged in ${describe(s.parcel.answer)}`,
+              fix: fixFor(s.parcel.answer),
             }),
             spoiled: s.spoiled + 1,
             hallStats: trackHall(s.hallStats, s.parcel, false),
@@ -214,7 +216,7 @@ function reducer(state, action) {
         ...penalty(s, 50, `−50 · That last one belonged in ${describe(parcel.answer)}`, {
           name: nameOf(parcel),
           issue: `Put in ${describe(target)}`,
-          fix: `belonged in ${describe(parcel.answer)}`,
+          fix: fixFor(parcel.answer),
           flags: [parcel.signature && 'signature', parcel.perishable && 'perishable'].filter(Boolean),
         }),
         hallStats,
