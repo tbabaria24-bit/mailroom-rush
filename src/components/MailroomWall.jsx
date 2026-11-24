@@ -6,7 +6,7 @@ function Bin({ hall, shelf, count, flash, onSort }) {
       className={`bin ${flash ? `bin--${flash}` : ''}`}
       style={{ '--hall': hall.color }}
       onClick={() => onSort({ hallId: hall.id, shelfId: shelf.id })}
-      aria-label={`${hall.name}, ${shelf.label}`}
+      aria-label={`${hall.name}, ${shelf.label}, ${count} parcels`}
     >
       <span className="bin__label">{shelf.label}</span>
       <span className="bin__hint">{shelf.hint}</span>
@@ -19,9 +19,10 @@ function Bin({ hall, shelf, count, flash, onSort }) {
   )
 }
 
-export default function MailroomWall({ counts, flash, onSort }) {
+export default function MailroomWall({ counts, flash, onSort, hasDesk, pickupMode }) {
+  const flashFor = (id) => (flash?.id === id ? `bin--${flash.type}` : '')
   return (
-    <section className="wall">
+    <section className={`wall ${pickupMode ? 'wall--pickup' : ''}`}>
       <div className="wall__grid">
         {HALLS.map((hall) => (
           <div key={hall.id} className="wall__col">
@@ -44,12 +45,17 @@ export default function MailroomWall({ counts, flash, onSort }) {
           </div>
         ))}
       </div>
-      <button
-        className={`rts ${flash?.id === 'rts' ? `bin--${flash.type}` : ''}`}
-        onClick={() => onSort('rts')}
-      >
-        ↩ Return to sender <span className="muted">— no resident by that name</span>
-      </button>
+      <div className={`wall__extra ${hasDesk ? 'wall__extra--two' : ''}`}>
+        {hasDesk && (
+          <button className={`desk ${flashFor('desk')}`} onClick={() => onSort('desk')}>
+            ✍️ Desk Hold <span className="muted">— signature required</span>
+            {counts.desk > 0 && <span className="desk__count">{counts.desk}</span>}
+          </button>
+        )}
+        <button className={`rts ${flashFor('rts')}`} onClick={() => onSort('rts')} disabled={pickupMode}>
+          ↩ Return to sender <span className="muted">— no resident by that name</span>
+        </button>
+      </div>
     </section>
   )
 }

@@ -22,6 +22,11 @@ export const SIZES = {
 
 export const CARRIERS = ['UPS', 'FedEx', 'USPS', 'Amazon', 'DHL']
 
+// Every shift is described by one config object. Quick-play difficulties and the
+// five career days share the same shape, so GameScreen doesn't care which it got.
+//   signatureChance  – parcel needs a signature → goes to the Desk Hold bin
+//   perishableChance – parcel spoils if it isn't shelved before its countdown ends
+//   pickupEvery      – seconds between residents walking up to collect (0 = off)
 export const DIFFICULTIES = {
   easy: {
     label: 'Easy',
@@ -29,22 +34,129 @@ export const DIFFICULTIES = {
     seconds: 90,
     showHall: true,
     rtsChance: 0,
+    signatureChance: 0,
+    perishableChance: 0,
+    pickupEvery: 0,
   },
   normal: {
     label: 'Normal',
-    blurb: 'Look each resident up in the roster, just like the real desk.',
+    blurb: 'Roster lookups, signature parcels and residents at the window.',
     seconds: 75,
     showHall: false,
     rtsChance: 0.12,
+    signatureChance: 0.08,
+    perishableChance: 0,
+    pickupEvery: 16,
   },
   rush: {
     label: 'Move-in Rush',
-    blurb: 'Less time, more strangers. Return unknown names to sender.',
-    seconds: 50,
+    blurb: 'Everything at once: strangers, signatures, perishables, pickups.',
+    seconds: 60,
     showHall: false,
-    rtsChance: 0.2,
+    rtsChance: 0.18,
+    signatureChance: 0.1,
+    perishableChance: 0.12,
+    pickupEvery: 12,
   },
 }
+
+// Career mode: your first week on the desk. Each day teaches one new rule and
+// has a target score that unlocks the next day.
+export const DAYS = [
+  {
+    id: 'mon',
+    day: 'Monday',
+    title: 'Orientation',
+    label: 'Mon · Orientation',
+    seconds: 60,
+    target: 900,
+    showHall: true,
+    rtsChance: 0,
+    signatureChance: 0,
+    perishableChance: 0,
+    pickupEvery: 0,
+    briefing: [
+      'Welcome to the desk! Today every label has the hall printed on it.',
+      'Match the parcel size to the shelf: envelopes on A, small boxes on B, large on C, oversize on the floor.',
+    ],
+    newRule: 'Shelving basics',
+  },
+  {
+    id: 'tue',
+    day: 'Tuesday',
+    title: 'The Roster',
+    label: 'Tue · The Roster',
+    seconds: 70,
+    target: 1000,
+    showHall: false,
+    rtsChance: 0.12,
+    signatureChance: 0,
+    perishableChance: 0,
+    pickupEvery: 0,
+    briefing: [
+      'Labels only say "Student Housing" now. Search the resident roster to find their hall.',
+      'If nobody by that name lives here, send it back with Return to sender.',
+    ],
+    newRule: 'Roster lookup & return to sender',
+  },
+  {
+    id: 'wed',
+    day: 'Wednesday',
+    title: 'Sign Here',
+    label: 'Wed · Sign Here',
+    seconds: 70,
+    target: 1200,
+    showHall: false,
+    rtsChance: 0.1,
+    signatureChance: 0.18,
+    perishableChance: 0,
+    pickupEvery: 0,
+    briefing: [
+      'Some parcels carry a ✍️ SIGNATURE REQUIRED stamp.',
+      'Those never go on a shelf. Put them in the Desk Hold bin so the resident can sign for them.',
+    ],
+    newRule: 'Signature parcels → Desk Hold',
+  },
+  {
+    id: 'thu',
+    day: 'Thursday',
+    title: 'Pickup Window',
+    label: 'Thu · Pickup Window',
+    seconds: 75,
+    target: 1400,
+    showHall: false,
+    rtsChance: 0.1,
+    signatureChance: 0.1,
+    perishableChance: 0,
+    pickupEvery: 13,
+    briefing: [
+      'Residents start showing up at the window 🙋 asking for packages you already shelved.',
+      'When someone is waiting, click the bin where you put their parcel before they lose patience.',
+    ],
+    newRule: 'Resident pickups',
+  },
+  {
+    id: 'fri',
+    day: 'Friday',
+    title: 'Move-in Rush',
+    label: 'Fri · Move-in Rush',
+    seconds: 75,
+    target: 1600,
+    showHall: false,
+    rtsChance: 0.15,
+    signatureChance: 0.1,
+    perishableChance: 0.14,
+    pickupEvery: 12,
+    briefing: [
+      'Move-in weekend. Meal kits and flowers 🧊 are PERISHABLE: shelve them before their countdown hits zero.',
+      'Everything from this week is in play. Hit the target to finish your first week!',
+    ],
+    newRule: 'Perishables + everything',
+  },
+]
+
+export const PERISHABLE_SECONDS = 8
+export const PICKUP_PATIENCE = 12
 
 const FIRST = [
   'Ava', 'Liam', 'Maya', 'Noah', 'Priya', 'Ethan', 'Sofia', 'Marcus', 'Chloe',
@@ -112,12 +224,13 @@ function trackingNumber(carrier) {
 
 let parcelCounter = 0
 
-// Create the next parcel. Some are addressed to people who don't live here.
-export function makeParcel(roster, difficulty) {
-  const { rtsChance } = DIFFICULTIES[difficulty]
+// Create the next parcel from a shift config. Some are addressed to people who
+// don't live here; some need a signature; some are perishable.
+export function makeParcel(roster, config) {
+  const { rtsChance, signatureChance = 0, perishableChance = 0 } = config
   const carrier = pick(CARRIERS)
   const sizeRoll = Math.random()
-  const size =
+  let size =
     sizeRoll < 0.32 ? 'envelope' : sizeRoll < 0.68 ? 'small' : sizeRoll < 0.9 ? 'large' : 'oversize'
 
   let recipient
@@ -132,19 +245,49 @@ export function makeParcel(roster, difficulty) {
     recipient = { first: resident.first, last: resident.last }
   }
 
+  // Only real residents get special handling; strangers are always return-to-sender.
+  const flagRoll = Math.random()
+  const signature = Boolean(resident) && flagRoll < signatureChance
+  const perishable =
+    Boolean(resident) && !signature && flagRoll >= signatureChance && flagRoll < signatureChance + perishableChance
+  if (perishable && size === 'envelope') size = 'small' // meal kits aren't envelopes
+  if (perishable) size = size === 'oversize' ? 'large' : size
+
+  let answer = 'rts'
+  if (resident && signature) answer = 'desk'
+  else if (resident) answer = { hallId: resident.hallId, shelfId: SHELVES.find((s) => s.fits === size).id }
+
   parcelCounter += 1
   return {
     key: parcelCounter,
-    carrier,
+    carrier: perishable ? pick(['HelloFresh', 'FedEx', 'UPS']) : carrier,
     tracking: trackingNumber(carrier),
     size,
     recipient,
     resident,
-    // The correct answer: a hall + shelf, or "rts" for return to sender.
-    answer: resident
-      ? { hallId: resident.hallId, shelfId: SHELVES.find((s) => s.fits === size).id }
-      : 'rts',
+    signature,
+    perishable,
+    // The correct answer: a hall + shelf, "desk" for signature holds, or "rts".
+    answer,
   }
+}
+
+// Turn an answer/target into a bin id and a readable description.
+export function binIdFor(target) {
+  if (target === 'rts' || target === 'desk') return target
+  return `${target.hallId}-${target.shelfId}`
+}
+
+export function describe(target) {
+  if (target === 'rts') return 'Return to sender'
+  if (target === 'desk') return 'Desk Hold'
+  const hall = HALLS.find((h) => h.id === target.hallId).name
+  const shelf = SHELVES.find((s) => s.id === target.shelfId).label
+  return `${hall} · ${shelf}`
+}
+
+export function sameTarget(a, b) {
+  return binIdFor(a) === binIdFor(b)
 }
 
 export function rankFor(score, accuracy) {
@@ -174,4 +317,33 @@ export function saveScore(entry) {
     /* storage unavailable */
   }
   return scores
+}
+
+// Career progress: which days are unlocked and the best score for each.
+const CAREER_KEY = 'mailroom-rush-career'
+
+export function loadCareer() {
+  try {
+    const c = JSON.parse(localStorage.getItem(CAREER_KEY))
+    if (c && typeof c.unlocked === 'number') return { best: {}, ...c }
+  } catch {
+    /* fall through */
+  }
+  return { unlocked: 1, best: {} }
+}
+
+export function saveCareerResult(dayIndex, score) {
+  const c = loadCareer()
+  const day = DAYS[dayIndex]
+  const best = { ...c.best, [day.id]: Math.max(c.best[day.id] || 0, score) }
+  const passed = score >= day.target
+  const unlocked = passed ? Math.max(c.unlocked, Math.min(dayIndex + 2, DAYS.length)) : c.unlocked
+  const weekDone = c.weekDone || (passed && dayIndex === DAYS.length - 1)
+  const next = { unlocked, best, weekDone }
+  try {
+    localStorage.setItem(CAREER_KEY, JSON.stringify(next))
+  } catch {
+    /* storage unavailable */
+  }
+  return { career: next, passed }
 }
